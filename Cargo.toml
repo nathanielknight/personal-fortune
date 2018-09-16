@@ -1,0 +1,9 @@
+[package]
+name = "personal-fortune"
+version = "0.1.0"
+authors = ["Nat Knight <nathaniel.ep@gmail.com>"]
+
+[dependencies]
+actix-web = "*"
+maud = "*"
+rusqlite = {version = "*", features=["bundled"]}
