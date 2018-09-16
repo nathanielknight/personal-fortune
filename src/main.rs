@@ -3,7 +3,7 @@ extern crate actix_web;
 extern crate maud;
 extern crate rusqlite;
 
-use actix_web::{server, App};
+use actix_web::{server, App, fs};
 
 mod model;
 mod view;
@@ -13,9 +13,13 @@ const ADDRESS: &'static str = "127.0.0.1:6429";
 
 fn main() -> Result<(), rusqlite::Error> {
     model::init_db()?;
-    server::new(|| App::new().resource("/", |r| r.f(|_| {view::Index::render_random()})))
+    server::new(||
+            App::new()
+                .resource("/", |r| r.f(|_| view::Index::render_random()))
+                .handler("/static", fs::StaticFiles::new("./static").unwrap())
+        )
         .bind(ADDRESS)
-        .expect(&format!("Couldn't bind to {}", ADDRESS))
+        .unwrap()
         .run();
     Ok(())
 }

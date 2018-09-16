@@ -14,7 +14,10 @@ fn respond_html(body: String) -> HttpResponse {
 fn in_site_template(body: String) -> String {
     let templated = html!{
         (DOCTYPE)
-        head {}
+        head {
+            title { "Personal Fortune" }
+            link rel="icon" type="image/png" href="/static/favicon.png";
+        }
         body {
             (PreEscaped(body))
         }
