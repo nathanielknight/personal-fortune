@@ -17,6 +17,7 @@ fn in_site_template(body: String) -> String {
         head {
             title { "Personal Fortune" }
             link rel="icon" type="image/png" href="/static/favicon.png";
+            link rel="stylesheet" href="static/style.css";
         }
         body {
             (PreEscaped(body))

@@ -1,0 +1,17 @@
+body {
+    max-width: 50em;
+    margin: auto;
+    margin-top: 2em;
+    font-size: 14pt;
+    font-family: Georgia, Garamond, serif;
+}
+
+a {
+    font-weight: normal;
+    color: gray;
+    font-style: italic;
+}
+
+a:hover {
+    color: orange;
+}
