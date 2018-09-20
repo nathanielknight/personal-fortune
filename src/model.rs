@@ -12,7 +12,7 @@ pub struct Entry {
     pub link: Option<String>,
 }
 
-const DB_PATH: &'static str = "./fortunes.sqlite";
+const DB_PATH: &str = "./fortunes.sqlite";
 
 pub fn init_db() -> Result<(), rusqlite::Error> {
     let db_path = path::Path::new(DB_PATH);
@@ -39,11 +39,11 @@ pub fn random_entry() -> Result<Entry, rusqlite::Error> {
         let source = row.get_checked(3)?;
         let link: Option<String> = row.get_checked(4)?;
         Ok(Entry{
-            id: id,
-            slug: slug,
-            content: content,
-            source: source,
-            link: link,
+            id,
+            slug,
+            content,
+            source,
+            link,
         })
     }
     let entry = conn.query_row("SELECT * FROM entry ORDER BY RANDOM() LIMIT 1", &[], row_to_entry)??;
