@@ -8,7 +8,7 @@ use actix_web::{server, App, fs};
 mod model;
 mod view;
 
-const ADDRESS: &'static str = "127.0.0.1:6429";
+const ADDRESS: &str = "127.0.0.1:6429";
 
 
 fn main() -> Result<(), rusqlite::Error> {
@@ -19,7 +19,7 @@ fn main() -> Result<(), rusqlite::Error> {
                 .handler("/static", fs::StaticFiles::new("./static").unwrap())
         )
         .bind(ADDRESS)
-        .unwrap()
+        .unwrap_or_else(|_| panic!("Couldn't bind to {}", ADDRESS))
         .run();
     Ok(())
 }
