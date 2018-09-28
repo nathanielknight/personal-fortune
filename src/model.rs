@@ -2,7 +2,6 @@ use std::path;
 
 use rusqlite;
 
-
 #[derive(Debug)]
 pub struct Entry {
     id: u32,
@@ -17,7 +16,7 @@ const DB_PATH: &str = "./fortunes.sqlite";
 pub fn init_db() -> Result<(), rusqlite::Error> {
     let db_path = path::Path::new(DB_PATH);
     let conn = rusqlite::Connection::open(&db_path)?;
-    let init_stm =  "
+    let init_stm = "
          CREATE TABLE IF NOT EXISTS entry(
              id INTEGER PRIMARY KEY,
              slug TEXT NOT NULL,
@@ -29,23 +28,39 @@ pub fn init_db() -> Result<(), rusqlite::Error> {
     Ok(())
 }
 
+fn row_to_entry(row: &rusqlite::Row) -> Result<Entry, rusqlite::Error> {
+    let id = row.get_checked(0)?;
+    let slug = row.get_checked(1)?;
+    let content = row.get_checked(2)?;
+    let source = row.get_checked(3)?;
+    let link: Option<String> = row.get_checked(4)?;
+    Ok(Entry {
+        id,
+        slug,
+        content,
+        source,
+        link,
+    })
+}
+
 pub fn random_entry() -> Result<Entry, rusqlite::Error> {
     let db_path = path::Path::new(DB_PATH);
     let conn = rusqlite::Connection::open(&db_path)?;
-    fn row_to_entry(row: &rusqlite::Row) -> Result<Entry, rusqlite::Error> {
-        let id = row.get_checked(0)?;
-        let slug = row.get_checked(1)?;
-        let content = row.get_checked(2)?;
-        let source = row.get_checked(3)?;
-        let link: Option<String> = row.get_checked(4)?;
-        Ok(Entry{
-            id,
-            slug,
-            content,
-            source,
-            link,
-        })
-    }
-    let entry = conn.query_row("SELECT * FROM entry ORDER BY RANDOM() LIMIT 1", &[], row_to_entry)??;
+    let entry = conn.query_row(
+        "SELECT * FROM entry ORDER BY RANDOM() LIMIT 1",
+        &[],
+        row_to_entry,
+    )??;
+    Ok(entry)
+}
+
+pub fn get_entry(slug: &str) -> Result<Entry, rusqlite::Error> {
+    let db_path = path::Path::new(DB_PATH);
+    let conn = rusqlite::Connection::open(&db_path)?;
+    let entry = conn.query_row(
+        "SELECT * FROM entry WHERE slug = ?",
+        &[&slug],
+        row_to_entry,
+    )??;
     Ok(entry)
 }

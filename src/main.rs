@@ -5,6 +5,7 @@ extern crate rusqlite;
 
 use actix_web::{server, App, fs};
 
+mod entry;
 mod model;
 mod view;
 
@@ -16,6 +17,7 @@ fn main() -> Result<(), rusqlite::Error> {
     server::new(||
             App::new()
                 .resource("/", |r| r.f(|_| view::Index::render_random()))
+                .resource("/entry/{slug}", |r| r.f(entry::serve_entry))
                 .handler("/static", fs::StaticFiles::new("./static").unwrap())
         )
         .bind(ADDRESS)

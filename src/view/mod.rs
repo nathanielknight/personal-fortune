@@ -1,14 +1,12 @@
-use actix_web::{HttpResponse};
-use maud::{PreEscaped, DOCTYPE, html};
+use actix_web::HttpResponse;
+use maud::{html, PreEscaped, DOCTYPE};
 
 mod index;
 
 pub use view::index::Index;
 
 fn respond_html(body: String) -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(body)
+    HttpResponse::Ok().content_type("text/html").body(body)
 }
 
 fn in_site_template(body: String) -> String {
@@ -17,10 +15,12 @@ fn in_site_template(body: String) -> String {
         head {
             title { "Personal Fortune" }
             link rel="icon" type="image/png" href="/static/favicon.png";
-            link rel="stylesheet" href="static/style.css";
+            link rel="stylesheet" href="/static/style.css";
+            meta charset="utf-8";
         }
         body {
             (PreEscaped(body))
+            p {a href="/" { "⚅ random"}}
         }
     };
     templated.into_string()
@@ -30,4 +30,3 @@ pub trait View {
     type ViewModel;
     fn render(vm: &Self::ViewModel) -> HttpResponse;
 }
-
