@@ -19,7 +19,7 @@ pub fn init_db() -> Result<(), rusqlite::Error> {
     let init_stm = "
          CREATE TABLE IF NOT EXISTS entry(
              id INTEGER PRIMARY KEY,
-             slug TEXT NOT NULL,
+             slug TEXT NOT NULL UNIQUE,
              content TEXT NOT NULL,
              source TEXT NOT NULL,
              link TEXT

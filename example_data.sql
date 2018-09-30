@@ -2,7 +2,7 @@ PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS entry(
              id INTEGER PRIMARY KEY,
-             slug TEXT NOT NULL,
+             slug TEXT NOT NULL UNIQUE,
              content TEXT NOT NULL,
              source TEXT NOT NULL,
              link TEXT
