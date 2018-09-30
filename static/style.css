@@ -1,9 +1,9 @@
 body {
-    max-width: 50em;
+    max-width: 33em;
     margin: auto;
     margin-top: 2em;
     font-size: 14pt;
-    font-family: Georgia, Garamond, serif;
+    font-family: 'Trebuchet MS', Verdana, sans-serif;
 }
 
 a {
@@ -14,4 +14,8 @@ a {
 
 a:hover {
     color: orange;
+}
+
+nav p {
+    font-size: 70%;
 }

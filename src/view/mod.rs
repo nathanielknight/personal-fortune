@@ -20,7 +20,6 @@ fn in_site_template(body: String) -> String {
         }
         body {
             (PreEscaped(body))
-            p {a href="/" { "⚅ random"}}
         }
     };
     templated.into_string()

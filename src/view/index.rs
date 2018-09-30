@@ -1,7 +1,7 @@
 pub struct Index {}
 
 use actix_web::HttpResponse;
-use maud::html;
+use maud::{html, PreEscaped};
 use model;
 use view::{in_site_template, respond_html, View};
 
@@ -11,13 +11,16 @@ impl View for Index {
         let slug_url = format!("/entry/{}", vm.slug);
         let body = html!{
             blockquote {
-                (vm.content)
+                (PreEscaped(&vm.content))
             }
             p {cite { (vm.source) }}
-            @if let Some(url) = &vm.link {
-                p {a href=(url) { "↪ link" }}
+            nav {
+                @if let Some(url) = &vm.link {
+                    p {a href=(url) { "↪ link" }}
+                }
+                p {a href=(slug_url) { "♾ permalink" } }
+                p {a href="/" { "⚅ random"}}
             }
-            p {a href=(slug_url) { "♾ permalink" } }
         };
         respond_html(in_site_template(body.into_string()))
     }
