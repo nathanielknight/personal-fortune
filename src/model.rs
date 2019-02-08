@@ -57,10 +57,38 @@ pub fn random_entry() -> Result<Entry, rusqlite::Error> {
 pub fn get_entry(slug: &str) -> Result<Entry, rusqlite::Error> {
     let db_path = path::Path::new(DB_PATH);
     let conn = rusqlite::Connection::open(&db_path)?;
-    let entry = conn.query_row(
-        "SELECT * FROM entry WHERE slug = ?",
-        &[&slug],
-        row_to_entry,
-    )??;
+    let entry = conn.query_row("SELECT * FROM entry WHERE slug = ?", &[&slug], row_to_entry)??;
     Ok(entry)
+}
+
+fn plink(href: &str, text: &str) -> String {
+    format!("<p><a href='{}'>{}</p>", href, text)
+}
+
+impl Into<String> for Entry {
+    fn into(self) -> String {
+        let source = match &self.link {
+            Some(url) => plink(url, "↪ link"),
+            None => String::from(""),
+        };
+        let slug_url = plink(&format!("/entry/{}", self.slug), "♾ permalink");
+        format!(
+            "<blockquote>
+{}
+</blockquote>
+<p>
+  <cite>{}</cite>
+</p>
+<nav>
+  {}
+  {}
+  {}
+</nav>",
+            &self.content,
+            &self.source,
+            source,
+            slug_url,
+            plink("/", "⚅ random")
+        )
+    }
 }
