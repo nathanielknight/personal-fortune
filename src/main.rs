@@ -1,3 +1,4 @@
+use pencil::helpers;
 use pencil::method::Get;
 use pencil::{abort, Pencil, PencilResult, Request, Response};
 use rusqlite;
@@ -41,7 +42,7 @@ fn random_entry(_: &mut Request) -> PencilResult {
 fn entry(req: &mut Request) -> PencilResult {
     let entry_id = match req.view_args.get("id") {
         Some(id) => id,
-        None => return abort(404),
+        None => return abort(400),
     };
     match model::get_entry(entry_id) {
         Ok(e) => {
@@ -52,12 +53,21 @@ fn entry(req: &mut Request) -> PencilResult {
     }
 }
 
+fn serve_static(req: &mut Request) -> PencilResult {
+    let fname = match req.view_args.get("fname") {
+        Some(s) => s,
+        None => return abort(400),
+    };
+    helpers::send_from_directory("static", fname, false)
+}
+
 fn main() -> Result<(), rusqlite::Error> {
     model::init_db()?;
     let mut app = Pencil::new("/");
 
     app.route("/", &[Get], "index", random_entry);
     app.route("/entry/<id:string>", &[Get], "entry", entry);
+    app.route("/static/<fname:path>", &[Get], "static", serve_static);
 
     println!("Serving personal-fortune on {}", ADDRESS);
     app.run(ADDRESS);
