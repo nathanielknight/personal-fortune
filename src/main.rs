@@ -12,7 +12,7 @@ fn in_site_template(body: &str) -> String {
         r#"<DOCTYPE html>
 <html>
 <head>
-  <title>Personal Fortune</title>
+  <title>Quotations</title>
   <link rel="icon" type="image/png" href="static/favicon.png" />
   <link rel="stylesheet" href="/static/style.css" />
   <meta charset="utf-8">

@@ -68,7 +68,7 @@ fn plink(href: &str, text: &str) -> String {
 impl Into<String> for Entry {
     fn into(self) -> String {
         let source = match &self.link {
-            Some(url) => plink(url, "↪ link"),
+            Some(url) => plink(url, "↪ source"),
             None => String::from(""),
         };
         let slug_url = plink(&format!("/entry/{}", self.slug), "♾ permalink");
