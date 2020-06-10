@@ -5,7 +5,7 @@ use rusqlite;
 
 mod model;
 
-const ADDRESS: &str = "127.0.0.1:6429";
+const ADDRESS: &str = "0.0.0.0:6429";
 
 fn in_site_template(body: &str) -> String {
     format!(
