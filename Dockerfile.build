@@ -1,8 +1,0 @@
-# This Dockerfile is for compiling the personal-fortune executable in a container.
-# This lets us use the `bundled` feature of the `rusqlite` crate (which requires a
-# working C compiler toolchain) when building on a Windows host.
-
-FROM rust:1.43
-
-WORKDIR /root/personal-fortune
-ENTRYPOINT ["cargo", "build", "--target", "x86_64-unknown-linux-gnu", "--release"]
