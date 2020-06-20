@@ -50,3 +50,10 @@ function Build-TarFile {
     tar -cf personal-fortune.tar personal-fortune fortunes.sqlite Dockerfile.serve
 }
 
+function Build-ServerContainer {
+    docker build -t pfserve -f Dockerfile.serve .
+}
+
+function Invoke-ServerContainer {
+    docker run --rm -it --name pfserve -p 6429:6429 pfserve
+}

@@ -1,0 +1,9 @@
+# This Dockerfile is for deploying to CapRover. It should be packaged in a
+# Tarfile with the compiled app, database file, and captain-definition file.
+FROM debian:buster-slim
+
+WORKDIR /root/
+ADD personal-fortune fortunes.sqlite /root/
+ADD static/ /root/static/
+RUN chmod 700 ./personal-fortune
+CMD ["./personal-fortune"]
