@@ -58,7 +58,13 @@ fn serve_static(req: &mut Request) -> PencilResult {
         Some(s) => s,
         None => return abort(400),
     };
-    helpers::send_from_directory("static", fname, false)
+    let mut response = helpers::send_from_directory("static", fname, false)?;
+    response.headers.set_raw(
+        "cache-control",
+        vec![b"max-age=3600".to_vec(), b"public".to_vec()],
+    );
+    Ok(response)
+
 }
 
 fn main() -> Result<(), rusqlite::Error> {
