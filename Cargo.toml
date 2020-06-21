@@ -1,9 +1,9 @@
 [package]
 name = "personal-fortune"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Nat Knight <nathaniel.ep@gmail.com>"]
 edition = "2018"
 
 [dependencies]
 rusqlite = {version = "*", features=["bundled"]}
-pencil = {version="*", default-features=false}
+simple-server = "0.4"
