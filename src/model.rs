@@ -92,3 +92,27 @@ impl Into<String> for Entry {
         )
     }
 }
+
+pub(crate) struct SearchResult {
+    pub source: String,
+    pub link: String,
+    pub snippet: String,
+    pub slug: String,
+}
+
+pub(crate) fn search(query: &str) -> Result<Vec<SearchResult>, rusqlite::Error> {
+    const SEARCH_STMT: &str =
+        "SELECT source, link, snippet, slug FROM entrytext WHERE entrytext MATCH ?";
+    let db_path = path::Path::new(DB_PATH);
+    let conn = rusqlite::Connection::open(&db_path)?;
+    let mut stmt = conn.prepare(&SEARCH_STMT)?;
+    let search= stmt
+        .query_map(&[&query], |row| SearchResult {
+            source: row.get(0),
+            link: row.get(1),
+            snippet: row.get(2),
+            slug: row.get(3),
+        })?;
+    let result = search.collect();
+    result
+}
