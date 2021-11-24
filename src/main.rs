@@ -2,49 +2,13 @@ use anyhow;
 use std::env;
 
 mod model;
+mod views;
 
-fn in_site_template(body: &str) -> String {
-    format!(
-        r#"<DOCTYPE html>
-<html>
-<head>
-  <title>Quotations</title>
-  <link rel="icon" type="image/png" href="static/favicon.png" />
-  <meta charset="utf-8">
-  <style>
-    body {{
-        max-width: 33em;
-        margin: auto;
-        margin-top: 2em;
-        font-size: 14pt;
-        font-family: 'Trebuchet MS', Verdana, sans-serif;
-    }}
-    a {{
-        font-weight: normal;
-        color: gray;
-        font-style: italic;
-    }}
-    a:hover {{
-        color: orange;
-    }}
-    nav p {{
-        font-size: 70%;
-    }}
-  </style>
-</head>
-<body>
-  {}
-</body>
-</html>"#,
-        body
-    )
-}
 
 fn render_entry(entry: model::Entry) -> tide::Response {
-    let e_str: String = entry.into();
     tide::Response::builder(200)
         .header("content-type", "text/html; charset=UTF-8")
-        .body(in_site_template(&e_str).as_bytes().to_vec())
+        .body(views::quote(&entry).as_bytes().to_vec())
         .build()
 }
 
