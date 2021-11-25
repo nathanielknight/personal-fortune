@@ -1,6 +1,5 @@
 use std::env;
 
-use anyhow;
 use tide::convert::Deserialize;
 
 mod model;
@@ -61,7 +60,7 @@ async fn search(req: tide::Request<()>) -> AppResponse {
         Some(ref q) => model::search(q)?,
         None => Vec::new(),
     };
-    render_search(&query.unwrap_or(String::new()), &results)
+    render_search(&query.unwrap_or_default(), &results)
 }
 
 type AppResponse = tide::Result<tide::Response>;

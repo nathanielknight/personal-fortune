@@ -1,7 +1,5 @@
 use std::path;
 
-use rusqlite;
-
 #[derive(Debug)]
 pub struct Entry {
     id: u32,
