@@ -24,7 +24,7 @@ pub fn init_db() -> Result<(), rusqlite::Error> {
              source TEXT NOT NULL,
              link TEXT
          )";
-    conn.execute(&init_stm, &[])?;
+    conn.execute(init_stm, &[])?;
     Ok(())
 }
 
@@ -61,58 +61,30 @@ pub fn get_entry(slug: &str) -> Result<Entry, rusqlite::Error> {
     Ok(entry)
 }
 
-fn plink(href: &str, text: &str) -> String {
-    format!("<p><a href='{}'>{}</p>", href, text)
-}
-
-impl Into<String> for Entry {
-    fn into(self) -> String {
-        let source = match &self.link {
-            Some(url) => plink(url, "↪ source"),
-            None => String::from(""),
-        };
-        let slug_url = plink(&format!("/entry/{}", self.slug), "♾ permalink");
-        format!(
-            "<blockquote>
-{}
-</blockquote>
-<p>
-  <cite>{}</cite>
-</p>
-<nav>
-  {}
-  {}
-  {}
-</nav>",
-            &self.content,
-            &self.source,
-            source,
-            slug_url,
-            plink("/", "⚅ random")
-        )
-    }
-}
-
+#[derive(Debug)]
 pub(crate) struct SearchResult {
     pub source: String,
-    pub link: String,
-    pub snippet: String,
+    pub link: Option<String>,
+    pub quote: String,
     pub slug: String,
 }
 
 pub(crate) fn search(query: &str) -> Result<Vec<SearchResult>, rusqlite::Error> {
+    log::debug!("Searching query={}", &query);
     const SEARCH_STMT: &str =
-        "SELECT source, link, snippet, slug FROM entrytext WHERE entrytext MATCH ?";
+        "SELECT source, link, content, slug FROM entrytext WHERE entrytext MATCH ?";
+    log::debug!("Connecting to DB");
     let db_path = path::Path::new(DB_PATH);
     let conn = rusqlite::Connection::open(&db_path)?;
-    let mut stmt = conn.prepare(&SEARCH_STMT)?;
-    let search= stmt
-        .query_map(&[&query], |row| SearchResult {
-            source: row.get(0),
-            link: row.get(1),
-            snippet: row.get(2),
-            slug: row.get(3),
-        })?;
-    let result = search.collect();
-    result
+    log::debug!("Preparing search statement");
+    let mut stmt = conn.prepare(SEARCH_STMT)?;
+    log::debug!("Performing search");
+    let search = stmt.query_map(&[&query], |row| SearchResult {
+        source: row.get(0),
+        link: row.get(1),
+        quote: row.get(2),
+        slug: row.get(3),
+    })?;
+    log::debug!("finished search");
+    search.collect()
 }

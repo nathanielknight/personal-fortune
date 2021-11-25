@@ -1,9 +1,10 @@
-use anyhow;
 use std::env;
+
+use anyhow;
+use tide::convert::Deserialize;
 
 mod model;
 mod views;
-
 
 fn render_entry(entry: model::Entry) -> tide::Response {
     tide::Response::builder(200)
@@ -38,28 +39,47 @@ async fn entry(req: tide::Request<()>) -> AppResponse {
     }
 }
 
+fn render_search(query: &str, results: &[model::SearchResult]) -> AppResponse {
+    let body = views::search_results(query, results);
+    let resp = tide::Response::builder(200)
+        .body(body.as_bytes())
+        .header("content-type", "text/html; charset=UTF-8")
+        .build();
+    Ok(resp)
+}
+
+#[derive(Deserialize, Debug, Default)]
+struct SearchQuery {
+    q: Option<String>,
+}
+
 async fn search(req: tide::Request<()>) -> AppResponse {
-    let query = req.param("q")?;
-    let results = model::search(query)?;
-    unimplemented!()
+    let searchquery: SearchQuery = req.query()?;
+    log::debug!("searchquery = {:?}", searchquery);
+    let query = searchquery.q;
+    let results = match query {
+        Some(ref q) => model::search(q)?,
+        None => Vec::new(),
+    };
+    render_search(&query.unwrap_or(String::new()), &results)
 }
 
 type AppResponse = tide::Result<tide::Response>;
 
 #[async_std::main]
 async fn main() -> Result<(), anyhow::Error> {
-    println!("Initializing");
+    pretty_env_logger::init();
+    log::info!("Initializing");
     model::init_db()?;
     let mut app = tide::new();
     app.at("").get(random_entry);
     app.at("entry/:slug").get(entry);
     app.at("search").get(search);
 
-    println!("Loading configuration");
+    log::info!("Loading configuration");
     let host = env::var("WTIIRN_HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
     let port = env::var("PORT").unwrap_or_else(|_| "6429".to_string());
 
-    println!("Serving personal-fortune on {}:{}", host, port);
     app.listen(format!("{}:{}", host, port)).await?;
     Ok(())
 }
