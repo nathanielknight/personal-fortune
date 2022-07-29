@@ -2,13 +2,14 @@ use crate::model::{Entry, SearchResult};
 use askama::Template;
 
 #[derive(Template)]
-#[template(path = "quote.html")]
+#[template(path = "main.html")]
 struct QuoteViewModel<'a> {
     entry: &'a Entry,
+    query: &'a str,
 }
 
 pub(crate) fn quote(entry: &Entry) -> String {
-    let e = QuoteViewModel { entry };
+    let e = QuoteViewModel { entry, query: "" };
     e.render().expect("Template rendering error in entry")
 }
 

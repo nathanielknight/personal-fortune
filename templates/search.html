@@ -18,10 +18,6 @@
 {% endblock %}
 
 {% block body %}
-<form>
-    <input  type="text" name="q" id="q" value="{{query}}" autofocus>
-    <input type="submit" value="Search">
-</form>
 
 {% if results.len() > 0 %}
 <table>
