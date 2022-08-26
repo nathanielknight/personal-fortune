@@ -66,14 +66,21 @@
     {% block body %}{% endblock %}
 
     <script>
+      const searchBox = document.getElementById("q");
+      const permalink = document.getElementById("permalink")?.href;
+
       function randomQuote() {
         window.location.replace("/");
       }
 
-      const searchBox = document.getElementById("q");
-
       function focusSearch() {
         searchBox?.focus();
+      }
+
+      function gotoPermalink() {
+        if (permalink !== undefined) {
+          window.location.replace(permalink);
+        }
       }
 
       function handleHotkey(evt) {
@@ -84,6 +91,11 @@
           case "r":
             if (evt.target !== searchBox) {
               randomQuote();
+            }
+            return;
+          case "p":
+            if (evt.target !== searchBox) {
+              gotoPermalink();
             }
             return;
         }

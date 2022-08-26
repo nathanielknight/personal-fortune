@@ -7,6 +7,6 @@
   {% match entry.link %} {% when Some with (link) %}
   <p><a href="{{link}}">↪ source</a></p>
   {% when None %} {% endmatch %}
-  <p><a href="/entry/{{entry.slug}}">♾ permalink</a></p>
+  <p><a id="permalink" href="/entry/{{entry.slug}}">♾ permalink</a></p>
 </nav>
 {% endblock %}
