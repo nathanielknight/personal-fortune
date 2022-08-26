@@ -1,86 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        body {
-            max-width: 40em;
-            margin: auto;
-            font-size: 14pt;
-            font-family: 'Trebuchet MS', Verdana, sans-serif;
-	    line-height: 145%;
-        }
+      body {
+        max-width: 40em;
+        margin: auto;
+        font-size: 14pt;
+        font-family: "Trebuchet MS", Verdana, sans-serif;
+        line-height: 145%;
+      }
 
-        a {
-            font-weight: normal;
-            color: gray;
-        }
+      a {
+        font-weight: normal;
+        color: gray;
+      }
 
-        a:hover {
-            color: orange;
-        }
+      a:hover {
+        color: orange;
+      }
 
-        nav {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-        }
+      nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
 
-        nav a,
-        nav form {
-            display: inline-block;
-            padding: 0 1em;
-            margin: 0.5em 0;
-        }
+      nav a,
+      nav form {
+        display: inline-block;
+        padding: 0 1em;
+        margin: 0.5em 0;
+      }
 
-	dt { font-weight: bold; padding-top: 1em;}
+      dt {
+        font-weight: bold;
+        padding-top: 1em;
+      }
 
-	img {max-width: 100%; }
+      img {
+        max-width: 100%;
+      }
     </style>
-    {% block head %}<title>Quotations</title>{% endblock %}
-</head>
+    {% block head %}
+    <title>Quotations</title>
+    {% endblock %}
+  </head>
 
-<body>
+  <body>
     <nav>
-        <a href="/">🎲Random</a>
-        <form action="/search">
-            <input type="text" name="q" id="q" placeholder="Click or press 'S' to search" value="{{query}}">
-            <input type="submit" value="Search">
-        </form>
-
+      <a href="/">🎲Random</a>
+      <form action="/search">
+        <input
+          type="text"
+          name="q"
+          id="q"
+          placeholder="Click or press 'S' to search"
+          value="{{query}}"
+        />
+        <input type="submit" value="Search" />
+      </form>
     </nav>
     {% block body %}{% endblock %}
 
     <script>
-        function randomQuote() {
-            window.location.replace("/")
-        }
+      function randomQuote() {
+        window.location.replace("/");
+      }
 
-        const searchBox = document.getElementById("q")
+      const searchBox = document.getElementById("q");
 
-        function focusSearch() {
-            searchBox?.focus()
-        }
+      function focusSearch() {
+        searchBox?.focus();
+      }
 
-        function handleHotkey(evt) {
-            switch (evt.key) {
-                case "s":
-                    focusSearch()
-                    return
-                case "r":
-                    if (evt.target !== searchBox) {
-                        randomQuote()
-                    }
-                    return
+      function handleHotkey(evt) {
+        switch (evt.key) {
+          case "s":
+            focusSearch();
+            return;
+          case "r":
+            if (evt.target !== searchBox) {
+              randomQuote();
             }
+            return;
         }
+      }
 
-        document.addEventListener("keyup", handleHotkey, false)
+      document.addEventListener("keyup", handleHotkey, false);
     </script>
-
-</body>
-
+  </body>
 </html>

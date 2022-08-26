@@ -1,42 +1,42 @@
-{% extends "base.html" %}
-
-{% block head %}
+{% extends "base.html" %} {% block head %}
 <style>
-    table {
-        border-collapse: collapse;
-        max-width: 60em;
-    }
-    th, td {
-        border: 1px solid black;
-        padding: 0.5em;
-    }
-    form {
-        padding: 1em;
-        margin: 1em;
-    }
+  table {
+    border-collapse: collapse;
+    max-width: 60em;
+  }
+  th,
+  td {
+    border: 1px solid black;
+    padding: 0.5em;
+  }
+  form {
+    padding: 1em;
+    margin: 1em;
+  }
 </style>
-{% endblock %}
-
-{% block body %}
-
-{% if results.len() > 0 %}
+{% endblock %} {% block body %} {% if results.len() > 0 %}
 <table>
-    <thead>
-        <tr>
-            <th>Quote</th>
-            <th>Source</th>
-            <th>Link</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for result in results %}
-        <tr>
-            <td><p>{{result.quote|safe}}</p><p><a href="/entry/{{result.slug}}">♾entry</a></p></td>
-            <td>{{result.source}}</td>
-            <td>{% match result.link %}{% when Some with (l)%}<a href="{{l}}">↪link</a>{% when None %}{% endmatch %}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+  <thead>
+    <tr>
+      <th>Quote</th>
+      <th>Source</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for result in results %}
+    <tr>
+      <td>
+        <p>{{result.quote|safe}}</p>
+        <p><a href="/entry/{{result.slug}}">♾entry</a></p>
+      </td>
+      <td>{{result.source}}</td>
+      <td>
+        {% match result.link %}{% when Some with (l)%}<a href="{{l}}">↪link</a
+        >{% when None %}{% endmatch %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
-{% endif %}
-{% endblock %}
+{% endif %} {% endblock %}
