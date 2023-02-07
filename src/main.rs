@@ -19,8 +19,10 @@ async fn main() -> Result<(), anyhow::Error> {
     log::info!("Loading configuration");
     let host = env::var("WTIIRN_HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
     let port = env::var("PORT").unwrap_or_else(|_| "6429".to_string());
+    let address = format!("{}:{}", host, port);
 
-    app.listen(format!("{}:{}", host, port)).await?;
+    println!("Listening on {}", address);
+    app.listen(address).await?;
     Ok(())
 }
 
