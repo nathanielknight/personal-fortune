@@ -30,7 +30,7 @@
         <p>{{result.quote|safe}}</p>
         <p><a href="/entry/{{result.slug}}">♾entry</a></p>
       </td>
-      <td>{{result.source}}</td>
+      <td>{{result.source|safe}}</td>
       <td>
         {% match result.link %}{% when Some with (l)%}<a href="{{l}}">↪link</a
         >{% when None %}{% endmatch %}
