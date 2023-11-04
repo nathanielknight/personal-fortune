@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block body %}
 <blockquote>{{entry.content|safe}}</blockquote>
 <p>
-  <cite>{{entry.source}}</cite>
+  <cite>{{entry.source|safe}}</cite>
 </p>
 <nav>
   {% match entry.link %} {% when Some with (link) %}
