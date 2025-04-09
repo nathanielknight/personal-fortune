@@ -15,15 +15,9 @@ pub(crate) type AppError = (StatusCode, String);
 async fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::init();
 
-    {
-        log::info!("Initializing");
-        let mut cxn = db_connection().expect("Couldn't connect to database");
-        model::init_db(&mut cxn).expect("Failed to initialize database");
-    }
-
     log::info!("Loading configuration");
-    let host = env::var("WTIIRN_HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
-    let port = env::var("PORT").unwrap_or_else(|_| "6429".to_string());
+    let host = env::var("PERSONAL_FORTUNE_HOST").unwrap_or_else(|_| "127.0.0.1".to_string());
+    let port = env::var("PERSONAL_FORTUNE_PORT").unwrap_or_else(|_| "6429".to_string());
     let addr: SocketAddr = format!("{}:{}", host, port)
         .parse()
         .expect("Invalid HOST and PORT format");
@@ -87,11 +81,16 @@ async fn search(
 
 // -------------------------------------------------------------------------
 // Utils
-const DB_PATH: &str = "./fortunes.sqlite";
 
 fn db_connection() -> Result<rusqlite::Connection, AppError> {
+    let db_path_str = env::var("PERSONAL_FORTUNE_DB_PATH").map_err(|_e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Database path not set".to_owned(),
+        )
+    })?;
     use std::path;
-    let db_path = path::Path::new(DB_PATH);
+    let db_path = path::Path::new(&db_path_str);
     rusqlite::Connection::open(db_path).map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
