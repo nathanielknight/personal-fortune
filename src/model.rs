@@ -10,10 +10,19 @@ pub struct Entry {
     pub link: Option<String>,
 }
 
+
+fn to_html(src: &str) -> String {
+    let parser = pulldown_cmark::Parser::new(src);
+    let mut content = String::new();
+    pulldown_cmark::html::push_html(&mut content, parser);
+    content
+}
+
+
 fn row_to_entry(row: &rusqlite::Row) -> Result<Entry, rusqlite::Error> {
     let slug = row.get(0)?;
     let raw_content: String = row.get(1)?;
-    let content = markdown::to_html(&raw_content);
+    let content = to_html(&raw_content);
     let source = row.get(2)?;
     let link: Option<String> = row.get(3)?;
     Ok(Entry {
@@ -67,9 +76,9 @@ pub(crate) fn search(
     let search = stmt
         .query_map([&query], |row| {
             let raw_source: String = row.get(0)?;
-            let source = markdown::to_html(&raw_source);
+            let source = to_html(&raw_source);
             let raw_content: String = row.get(2)?;
-            let content = markdown::to_html(&raw_content);
+            let content = to_html(&raw_content);
             Ok(SearchResult {
                 source,
                 link: row.get(1)?,
